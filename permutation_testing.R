@@ -1,0 +1,96 @@
+
+# Permutation testing for Capstone work with RMI
+
+options(scipen=999) # force full notation not scientific
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(patchwork)
+
+path_100 <- here("data", "adjacent_df_200m_forpermutation.tsv")
+path_200 <- here("data", "adjacent_df_200m_forpermutation.tsv")
+path_500 <- here("data", "adjacent_df_500m_forpermutation.tsv")
+path_1000 <- here("data", "adjacent_df_1000m_forpermutation.tsv")
+path_2000 <- here("data", "adjacent_df_2000m_forpermutation.tsv")
+path_3000 <- here("data", "adjacent_df_3000m_forpermutation.tsv")
+path_4000 <- here("data", "adjacent_df_4000m_forpermutation.tsv")
+path_5000 <- here("data", "adjacent_df_5000m_forpermutation.tsv")
+
+
+get.prop.diff <- function(x){
+  in_buffer <- sum(x$MINORPOP_intersect_count) / sum(x$ACSTOTPOP_intersect_count)
+  out_buffer <- sum(x$out_mnr_count) / sum(x$out_pop_count)
+  return(in_buffer - out_buffer)
+}
+
+permutation_test <- function(path, buffer_size){
+  df <- read_tsv(path)
+  
+  # df <- na.omit(df[, c("MINORPOP_intersect_count", "ACSTOTPOP_intersect_count",
+  #                      "out_mnr_count", "out_pop_count")])
+  
+  actual.value <- get.prop.diff(df) 
+  
+  n.sim <- 2000
+  
+  results <- tibble(statistic = c(actual.value,
+                                  rep(NA,n.sim)))
+  new.df <- df %>% 
+    select(ACSTOTPOP, MINORPOP,
+           MINORPOP_intersect_count, ACSTOTPOP_intersect_count,
+           out_mnr_count, out_pop_count, intersect_prop)
+  
+  set.seed(42)
+  
+  for(i in 2:nrow(results)){
+    new.df$intersect_prop <- sample(new.df$intersect_prop)
+    
+    # create new counts variables based on the sampled proportion
+    new.df$ACSTOTPOP_intersect_count <- new.df$intersect_prop*new.df$ACSTOTPOP
+    new.df$MINORPOP_intersect_count <- new.df$intersect_prop*new.df$MINORPOP
+    new.df$out_pop_count <- new.df$ACSTOTPOP - new.df$ACSTOTPOP_intersect_count
+    new.df$out_mnr_count <- new.df$MINORPOP - new.df$MINORPOP_intersect_count
+    
+    # Calc result statistic
+    results$statistic[i] <- get.prop.diff(new.df)
+  }
+  
+  this_sd <- sd(results$statistic)
+  
+  max_density <- max(results$statistic, na.rm = TRUE)
+  pval <- mean(results$statistic > actual.value)
+  pval_label <- paste0("p-value:\n", round(pval, 3))
+  act_label <- paste0("act. value:\n", round(actual.value, 3))
+  
+  
+  plot <- ggplot(results, aes(x=statistic)) + 
+    geom_density() + 
+    geom_vline(xintercept=actual.value,color="red") +
+    #annotate("text", x=-.1, y=35, label=pval_label, color="red", size=3) + # add the label
+    #annotate("text", x=.12, y=35, label=act_label, color="red", size=3) + # add the label
+    #ylim(0, 50) +  # set y limits
+    xlim(-.3,.3)+
+    theme_minimal() + 
+    labs(x=NULL, y=paste0(buffer_size,"m"))  # remove x label and add y label
+  
+  return(plot)
+}
+
+permutation_test_multi <- function(paths, buffer_sizes){
+  plots <- list()
+  for (i in seq_along(paths)){
+    plots[[i]] <- permutation_test(paths[i], buffer_sizes[i])
+  }
+  # combine the plots using patchwork
+  plot_combined <- wrap_plots(plots) + 
+    plot_layout(ncol = 1) +
+    plot_annotation(title = "Density Plots for Multiple Flare Buffers")
+  return(plot_combined)
+}
+
+buffer_sizes <- c(100,200, 500, 1000, 2000, 3000, 4000, 5000)
+buffer_sizes <- sort(buffer_sizes, decreasing = TRUE)
+
+paths <- sort(c(path_5000, path_4000, path_3000, path_2000, 
+                path_1000, path_500, path_200, path_100), decreasing = TRUE)
+permutation_test_multi(paths, buffer_sizes)
