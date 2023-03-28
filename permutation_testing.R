@@ -7,10 +7,11 @@ library(here)
 library(ggplot2)
 library(patchwork)
 
-path_100 <- here("data", "adjacent_df_200m_forpermutation.tsv")
+path_100 <- here("data", "adjacent_df_100m_forpermutation.tsv")
 path_200 <- here("data", "adjacent_df_200m_forpermutation.tsv")
 path_500 <- here("data", "adjacent_df_500m_forpermutation.tsv")
 path_1000 <- here("data", "adjacent_df_1000m_forpermutation.tsv")
+path_1500 <- here("data", "adjacent_df_1500m_forpermutation.tsv")
 path_2000 <- here("data", "adjacent_df_2000m_forpermutation.tsv")
 path_3000 <- here("data", "adjacent_df_3000m_forpermutation.tsv")
 path_4000 <- here("data", "adjacent_df_4000m_forpermutation.tsv")
@@ -88,9 +89,14 @@ permutation_test_multi <- function(paths, buffer_sizes){
   return(plot_combined)
 }
 
-buffer_sizes <- c(100,200, 500, 1000, 2000, 3000, 4000, 5000)
+buffer_sizes <- c(100,200, 500, 1000, 1500, 2000, 3000, 4000, 5000)
 buffer_sizes <- sort(buffer_sizes, decreasing = TRUE)
 
-paths <- sort(c(path_5000, path_4000, path_3000, path_2000, 
-                path_1000, path_500, path_200, path_100), decreasing = TRUE)
+buffer_sizes
+paths <- c(path_5000, path_4000, path_3000, path_2000, path_1500, 
+                path_1000, path_500, path_200, path_100)
+
+paths
 permutation_test_multi(paths, buffer_sizes)
+
+permutation_test(path_5000, 5000)
