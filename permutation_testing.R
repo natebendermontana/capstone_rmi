@@ -100,14 +100,14 @@ buffer_sizes
 paths
 
 # Visualize density plot of single buffer size, if needed
-
 permutation_test_plot2 <- function(data,buffer_size){
   
   actual.value <- data$actual.value
   data <- data$results
   
-  max_density <- max(data$statistic, na.rm = TRUE)
-  pval <- mean(data$statistic > actual.value)
+  #max_density <- max(data$statistic, na.rm = TRUE)
+  #mean(abs(results$statistic) >= actual.value
+  pval <- mean(abs(data$statistic) >= actual.value)
   pval_label <- paste0("p-value:\n", round(pval, 3))
   act_label <- paste0("act. value:\n", round(actual.value, 3))
   
@@ -127,20 +127,22 @@ permutation_test_plot2 <- function(data,buffer_size){
          x = "\n(In Buffer Minority %) - (Out Buffer Minority %)") +
    # xlim(-.3,.3)+
     theme_minimal() +
-    geom_label(aes(x = -0.07, y = 9.8, label = "Whites More Affected"), 
+    geom_label(aes(x = -0.2, y = 17.5, label = "Whites More Affected"), 
                size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
-               label.size = 0.15, hjust = 1) +
-    geom_label(aes(x = 0.05, y = 9.8, label = "BIPOC More Affected"), 
+               label.size = 0.15, hjust = 0) +
+    geom_label(aes(x = 0.15, y = 17.5, label = "BIPOC More Affected"), 
                size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
                label.size = 0.15, hjust = 0)
    # expand_limits(y = c(0, 9.96)) # increase the y-axis limit to include the label elements
     #labs(x=NULL, y=paste0(buffer_size,"m"))  # remove x label and add y label
   
+  print(pval)
   return(plot)
 }   
 test <- permutation_test(paths, buffer_sizes)
 permutation_test_plot2(test, buffer_sizes)
 
+test$actual.value
 
 
 #####
