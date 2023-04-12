@@ -89,9 +89,9 @@ permutation_test_multi <- function(paths, buffer_sizes){
 }
 
 # Set up buffer sizes and file paths
-#buffer_sizes <- c(100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000)
+buffer_sizes <- c(100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000)
 # single size for permutation viz, if needed
-buffer_sizes <- 2000
+#buffer_sizes <- 2000
 
 file_names <- paste0("adjacent_df_",buffer_sizes,"m_forpermutation.tsv")
 paths <- here("data",file_names)
@@ -125,14 +125,14 @@ permutation_test_plot2 <- function(data,buffer_size){
     #scale_y_discrete(labels = function(x) scales::comma(as.numeric(x))) +
     labs(y = "Density\n",
          x = "\n(In Buffer Minority %) - (Out Buffer Minority %)") +
-   # xlim(-.3,.3)+
-    theme_minimal() +
-    geom_label(aes(x = -0.2, y = 17.5, label = "Whites More Affected"), 
-               size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
-               label.size = 0.15, hjust = 0) +
-    geom_label(aes(x = 0.15, y = 17.5, label = "BIPOC More Affected"), 
-               size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
-               label.size = 0.15, hjust = 0)
+    xlim(-.12,.12)+
+    theme_minimal(base_size = 14) +
+    # geom_label(aes(x = -0.2, y = 17.5, label = "Whites More Affected"), 
+    #            size = 4, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
+    #            label.size = 0.15, hjust = 0) +
+    # geom_label(aes(x = 0.15, y = 17.5, label = "BIPOC More Affected"), 
+    #            size = 4, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
+    #            label.size = 0.15, hjust = 0)
    # expand_limits(y = c(0, 9.96)) # increase the y-axis limit to include the label elements
     #labs(x=NULL, y=paste0(buffer_size,"m"))  # remove x label and add y label
   
@@ -209,20 +209,20 @@ ggplot(for_plot, aes(y = buff_fct, x = average_effect)) +
   geom_point() + 
   geom_errorbarh(aes(xmin = lb, xmax = ub, y = buff_fct), height = 0.1) + 
   geom_vline(xintercept = 0.0) + 
-  theme_minimal() +
+  theme_minimal(base_size = 14) +
   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
   scale_x_continuous(labels=scales::percent) +
 #  scale_y_discrete(labels=scales::comma) +
   scale_y_discrete(labels = function(x) scales::comma(as.numeric(x))) +
   labs(y = "Buffer Radius (m)\n",
-       x = "\n(In Buffer Minority %) - (Out Buffer Minority %)") +
-  geom_label(aes(x = -0.07, y = 9.8, label = "Whites More Affected"), 
-             size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
-             label.size = 0.15, hjust = 1) +
-  geom_label(aes(x = 0.05, y = 9.8, label = "BIPOC More Affected"), 
-             size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
-             label.size = 0.15, hjust = 0) +
-  expand_limits(y = c(0, 9.96)) # increase the y-axis limit to include the label elements
+       x = "\n(In Buffer Minority %) - (Out Buffer Minority %)")
+  # geom_label(aes(x = -0.07, y = 9.8, label = "Whites More Affected"), 
+  #            size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
+  #            label.size = 0.15, hjust = 1) +
+  # geom_label(aes(x = 0.05, y = 9.8, label = "BIPOC More Affected"), 
+  #            size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
+  #            label.size = 0.15, hjust = 0) +
+  # expand_limits(y = c(0, 9.96)) # increase the y-axis limit to include the label elements
 
 
 

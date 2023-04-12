@@ -216,7 +216,7 @@ ggplot(for_plot, aes(y = buff_fct, x = average_effect)) +
 #  scale_y_discrete(labels=scales::comma) +
   scale_y_discrete(labels = function(x) scales::comma(as.numeric(x))) +
   labs(y = "Buffer Radius (m)\n",
-       x = "\n(In Buffer Minority %) - (Out Buffer Minority %)") +
+       x = "\n(In Buffer Minority %) - (Out Buffer Minority %)")
   # geom_label(aes(x = -0.07, y = 9.8, label = "Whites More Affected"), 
   #            size = 3, fill = "white", color = "black", label.padding = unit(0.3, "lines"),
   #            label.size = 0.15, hjust = 1) +
