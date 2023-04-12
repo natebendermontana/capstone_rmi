@@ -8,6 +8,7 @@ library(patchwork)
 library(tidyverse)
 
 
+# function for calculating test statistic
 get.prop.diff <- function(x){
   in_buffer <- sum(x$MINORPOP_intersect_count) / sum(x$ACSTOTPOP_intersect_count)
   out_buffer <- sum(x$out_mnr_count) / sum(x$out_pop_count)
@@ -16,9 +17,6 @@ get.prop.diff <- function(x){
 
 permutation_test <- function(path, buffer_size){
   df <- read_tsv(path)
-  
-  # df <- na.omit(df[, c("MINORPOP_intersect_count", "ACSTOTPOP_intersect_count",
-  #                      "out_mnr_count", "out_pop_count")])
   
   actual.value <- get.prop.diff(df) 
   
@@ -143,9 +141,10 @@ permutation_test_plot2 <- function(data,buffer_size){
   print(pval)
   return(plot)
 }   
+
+# Plot single permutation test, if needed
 test <- permutation_test(paths, buffer_sizes)
 permutation_test_plot2(test, buffer_sizes)
-
 test$actual.value
 
 
@@ -154,12 +153,7 @@ test$actual.value
 results <- vector("list", length(buffer_sizes))
 
 for(this_buffer in buffer_sizes){
-#  if(exists("results")){
-#    rm(results)
-#  } 
-  
   results[[this_buffer]] <- permutation_test(paths[buffer_sizes==this_buffer],this_buffer)
-    
 }
 
 #TESTING
@@ -191,24 +185,6 @@ for_plot <- for_plot %>%
          ub = ub + average_effect,
          buff_fct = as_factor(buffer_size))
 
-# Orig code - version with buffer size as a factor
-# ggplot(for_plot,
-#        aes(y=buff_fct,x=average_effect)) + 
-#   geom_point() + 
-#   geom_errorbarh(aes(xmin=lb,xmax=ub,y=buff_fct),height=0.1) + 
-#   geom_vline(xintercept=0.0) + 
-#   theme_minimal() +
-#   
-#   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
-#   labs(y="Buffer Size (m)",
-#        x="(In Buffer Minority %) - (Out Buffer Minority %)") +
-#   geom_text(aes(x = -0.1,y=10,
-#            label = "Whites More Affected"),
-#            size=3) +
-#   geom_text(aes(x = 0.1, y=10,
-#                label = "BIPOC More Affected"),
-#            size=3)
-
 ggplot(for_plot, aes(y = buff_fct, x = average_effect)) +
   geom_point() + 
   geom_errorbarh(aes(xmin = lb, xmax = ub, y = buff_fct), height = 0.1) + 
@@ -230,22 +206,20 @@ ggplot(for_plot, aes(y = buff_fct, x = average_effect)) +
 
 
 
-
-
-# version with buffer size as continuous
-ggplot(for_plot,
-       aes(y=buffer_size,x=average_effect)) + 
-  geom_point() + 
-  geom_errorbarh(aes(xmin=lb,xmax=ub,y=buffer_size),height=0) + 
-  geom_vline(xintercept=0.0) + 
-  theme_minimal() + 
-  labs(y="Buffer Size (m)",
-       x="(In Buffer Minority %) - (Out Buffer Minority %)") +
-  geom_text(aes(x = -0.15,y=4500,
-                label = "Whites More Affected"),
-            size=3) + 
-  geom_text(aes(x = 0.1, y=4500,
-                label = "BIPOC More Affected"),
-            size=3) 
+# version with buffer size as continuous. If needed.
+# ggplot(for_plot,
+#        aes(y=buffer_size,x=average_effect)) + 
+#   geom_point() + 
+#   geom_errorbarh(aes(xmin=lb,xmax=ub,y=buffer_size),height=0) + 
+#   geom_vline(xintercept=0.0) + 
+#   theme_minimal() + 
+#   labs(y="Buffer Size (m)",
+#        x="(In Buffer Minority %) - (Out Buffer Minority %)") +
+#   geom_text(aes(x = -0.15,y=4500,
+#                 label = "Whites More Affected"),
+#             size=3) + 
+#   geom_text(aes(x = 0.1, y=4500,
+#                 label = "BIPOC More Affected"),
+#             size=3) 
 
 
