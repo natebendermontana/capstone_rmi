@@ -93,7 +93,11 @@ buffer_sizes <- c(100, 200, 500, 1000, 1500, 2000, 3000, 4000, 5000)
 # single size for permutation viz, if needed
 #buffer_sizes <- 2000
 
-file_names <- paste0("adjacent_df_",buffer_sizes,"m_forpermutation.tsv")
+# CA
+file_names <- paste0("ca_df_",buffer_sizes,"m_forpermutation.tsv")
+# intersected-and-adjacent
+#file_names <- paste0("adjacent_df_",buffer_sizes,"m_forpermutation.tsv")
+
 paths <- here("data",file_names)
 
 buffer_sizes
