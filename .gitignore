@@ -2,6 +2,7 @@
 .DS_Store
 census_api_key.py
 api_keys.csv
+.Rhistory
 
 # user-created files
 data/
