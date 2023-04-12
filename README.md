@@ -4,6 +4,8 @@ Master's of Science in Business Analytics (MSBA) Capstone work in conjunction wi
 ### Overview
 A pilot project to develop an interactive tool mapping California’s most harmful methane flaring and the socially vulnerable communities least able to cope with that hazard.
 
+The completed tool can be found on Tableau Public, here: https://public.tableau.com/app/profile/nate.bender
+
 ###
 Research Question 1: which flares are most impactful? 
 RQ2: which block groups are being the most impacted? 
