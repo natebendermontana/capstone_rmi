@@ -7,7 +7,7 @@ A pilot project to develop an interactive tool mapping California’s most harmf
 The completed tool can be found on Tableau Public, here: https://public.tableau.com/app/profile/nate.bender
 
 ###
-Research Question 1: which flares are most impactful? 
+Research Question 1: which flares are most impactful?    
 RQ2: which block groups are being the most impacted? 
 01_data_clean_load.ipynb   
 02.1_bg_flare_impact.ipynb  
